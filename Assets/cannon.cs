@@ -7,6 +7,7 @@ public class cannon : MonoBehaviour {
     Camera cam;
     public static RaycastHit hit;
     Ray ray;
+    public float offset;
 
     void Start() { 
         Debug.Log("loading cannon script");
@@ -26,6 +27,6 @@ public class cannon : MonoBehaviour {
     IEnumerator Fire() {
         yield return new WaitForSeconds(0.05f);
         Rigidbody cannonballClone = (Rigidbody) Instantiate(cannonball, new Vector3(0, 4, 0), Quaternion.identity);
-        cannonballClone.velocity = hit.point;
+        cannonballClone.velocity = new Vector3(hit.point.x ,hit.point.y+offset,hit.point.z);
     }
 }

@@ -83,7 +83,6 @@
   <ItemGroup>
     <Compile Include="Assets\cannon.cs" />
     <Compile Include="Assets\spawner.cs" />
-    <Compile Include="Assets\targetControl.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

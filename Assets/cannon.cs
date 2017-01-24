@@ -5,18 +5,27 @@ using UnityEngine;
 public class cannon : MonoBehaviour {
     public Rigidbody cannonball;
     Camera cam;
-	void Start () {
+    public static RaycastHit hit;
+    Ray ray;
+
+    void Start() { 
         Debug.Log("loading cannon script");
         cam = Camera.main;
-        StartCoroutine(Fire());
     }
-	
-	void Update () {
-	}
+    void Update () {
+        ray = cam.ScreenPointToRay(new Vector3(Screen.width/2,Screen.height/2,0));
+
+        Physics.Raycast(ray, out hit);
+        //this will be according to camera gaze to
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(Fire());
+        }
+    }
 
     IEnumerator Fire() {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(0.05f);
         Rigidbody cannonballClone = (Rigidbody) Instantiate(cannonball, new Vector3(0, 4, 0), Quaternion.identity);
-        cannonballClone.velocity = new Vector3(0, 5, 25);
+        cannonballClone.velocity = hit.point;
     }
 }

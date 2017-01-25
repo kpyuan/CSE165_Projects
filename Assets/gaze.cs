@@ -6,64 +6,81 @@ using UnityEngine.SceneManagement;
 public class gaze : MonoBehaviour {
     Camera cam;
     public Rigidbody cannonball;
-    public float cannonFireOffset; //for perfect accuracy
-    LineRenderer line;
+
+    private float dwellTime;
+    private GameObject currentTarget;
+    private GameObject previousTarget;
+    private int selection;
 
     void Start() { 
         Debug.Log("loading gaze script");
         cam = Camera.main;
-        line = GetComponent<LineRenderer>();
-        line.enabled = false;//disable the laser in the beginning of the game
-
+        dwellTime = 0;
+        selection = 0;
+        previousTarget = null;
+        currentTarget = null;
     }
     
     void Update () {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        RaycastHit hit;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit)) { //looking at something
+            currentTarget = hit.collider.gameObject;
+            if (currentTarget.tag == "selector" || currentTarget.tag == "destructible") { //looking at selector or destructible
+                if (previousTarget && previousTarget.GetInstanceID() == currentTarget.GetInstanceID()) { //looking at same object
+                    dwellTime = dwellTime + Time.deltaTime; Debug.Log("same obj " + dwellTime);
+                    if (dwellTime > 2) { //activate
+                        if (currentTarget.tag == "selector") { //change selection
+                            selection = (selection + 1) % 3;
+                            Debug.Log("selected: " + selection);
+                            dwellTime = 0;
+                        }
+                        else if (currentTarget.tag == "destructible") { //nothing, cannon, or laser
+                            if (selection == 1) {
+                                FireCannon();
+                            }
+                            else if (selection == 2) {
+                                Debug.Log("sent input");
+                                FireLaser(currentTarget);
+                            }
+                            dwellTime = 0;
+                        }
+                    }
+                }
+                else { //looking at different object
+                    dwellTime = 0;
+                    previousTarget = currentTarget;
+                }
+            } else { //looking at neither selector nor destructible
+                previousTarget = null;
+                dwellTime = 0;
+            }
+        } else { //looking at nothing
+            previousTarget = null;
+            dwellTime = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z)) {
+            selection = (selection + 1) % 3;
+            Debug.Log("selected: "+selection);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
             FireCannon();
         }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            FireLaser();
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
+
+        if (Input.GetKeyDown(KeyCode.R)) {
             SceneManager.LoadScene("BrickWall",LoadSceneMode.Single);
         }
     }
 
     void FireCannon() {
-        line.enabled = false;
-        //this code only fires when the player is looking directly at a physics object
-        RaycastHit hit;
-        Ray sight = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if (Physics.Raycast(sight, out hit, 100) || true) {
-            Rigidbody cannonballClone = (Rigidbody) Instantiate(cannonball, cam.transform.position, Quaternion.identity);
-            cannonballClone.velocity = new Vector3(sight.direction.x,sight.direction.y+cannonFireOffset,sight.direction.z)*25;
-        }
-
-        //this code always fires
-        /*Rigidbody cannonballClone = (Rigidbody)Instantiate(cannonball, cam.transform.position, Quaternion.identity);
-        cannonballClone.velocity = cam.transform.forward * 25;*/
+        Rigidbody cannonballClone = (Rigidbody)Instantiate(cannonball, cam.transform.position, Quaternion.identity);
+        cannonballClone.velocity = cam.transform.forward * 25;
     }
 
-    void FireLaser()
-    {
-        
-        line.enabled = true;
-        RaycastHit hit;
-        Ray sight = cam.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if (Physics.Raycast(sight, out hit, 100))
-        {
-            if (hit.collider)
-            {
-                line.SetPosition(1, new Vector3(0,0,hit.distance));
-                Destroy(hit.transform.gameObject);
-            }
-            
-        }
-        else
-        {
-            line.SetPosition(1, new Vector3(0, 0, 5000));
+    void FireLaser(GameObject laserTarget) {
+        if (laserTarget.tag == "destructible") {
+            Destroy(laserTarget);
         }
     }
 }

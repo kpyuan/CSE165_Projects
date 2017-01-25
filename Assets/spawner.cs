@@ -18,7 +18,7 @@ public class spawner : MonoBehaviour {
             yield return new WaitForSeconds(0.05f);
             float angle = (i+offset) * Mathf.PI * 2 / count;
             Vector3 position = new Vector3(Mathf.Cos(angle)*radius, height, Mathf.Sin(angle)*radius);
-            GameObject brickClone = (GameObject) Instantiate(brick, position, Quaternion.LookRotation(position-(new Vector3(0, height, 0))));
+            /*GameObject brickClone = (GameObject) */Instantiate(brick, position, Quaternion.LookRotation(position-(new Vector3(0, height, 0))));
         }
     }
 

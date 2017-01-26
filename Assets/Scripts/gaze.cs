@@ -7,10 +7,10 @@ public class gaze : MonoBehaviour {
     Camera cam;
     public Rigidbody cannonball;
 
-    private float dwellTime;
+    public static float dwellTime;
     private GameObject currentTarget;
     private GameObject previousTarget;
-    private int selection;
+    public static int selection;
 
     void Start() { 
         Debug.Log("loading gaze script");
@@ -27,7 +27,7 @@ public class gaze : MonoBehaviour {
             currentTarget = hit.collider.gameObject;
             if (currentTarget.tag == "selector" || currentTarget.tag == "destructible") { //looking at selector or destructible
                 if (previousTarget && previousTarget.GetInstanceID() == currentTarget.GetInstanceID()) { //looking at same object
-                    dwellTime = dwellTime + Time.deltaTime; Debug.Log("same obj " + dwellTime);
+                    dwellTime = dwellTime + Time.deltaTime; //Debug.Log("same obj " + dwellTime);
                     if (dwellTime > 2) { //activate
                         if (currentTarget.tag == "selector") { //change selection
                             selection = (selection + 1) % 3;
@@ -58,7 +58,12 @@ public class gaze : MonoBehaviour {
             previousTarget = null;
             dwellTime = 0;
         }
+        //restart game if looking straight up at sky
+        if (checkUpAngle(cam.transform.forward, 10.0f)){
+            SceneManager.LoadScene("BrickWall", LoadSceneMode.Single);
+        }
 
+        //for debugging purpose
         if (Input.GetKeyDown(KeyCode.Z)) {
             selection = (selection + 1) % 3;
             Debug.Log("selected: "+selection);
@@ -81,6 +86,19 @@ public class gaze : MonoBehaviour {
     void FireLaser(GameObject laserTarget) {
         if (laserTarget.tag == "destructible") {
             Destroy(laserTarget);
+        }
+    }
+    //check to see if the angle between the gaze vector and up vector are within certain range
+    bool checkUpAngle(Vector3 gaze, float angleRange)
+    {
+        float angle = Vector3.Angle(Vector3.up, gaze);
+        //Debug.Log("angle is " + angle);
+        if (angle <= angleRange){
+            
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

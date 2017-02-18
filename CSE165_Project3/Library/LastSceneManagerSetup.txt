@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/AirRacer.unity
+  isLoaded: 1
+  isActive: 1

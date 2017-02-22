@@ -12,6 +12,8 @@ public class racetrack : MonoBehaviour {
     void Start () {
         track = new List<GameObject>();
         generateTrack("track.txt");
+        //have player start at the starting point
+        player.transform.position = track[0].transform.position;
 	}
 
     void Update() {
@@ -21,6 +23,7 @@ public class racetrack : MonoBehaviour {
                 hitCheckpoint();
             }
         }
+        
     }
 
     void generateTrack(string fileName) {

@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class racetrack : MonoBehaviour {
     public GameObject checkpoint;
+    public GameObject player;
 
-	void Start () {
+    List<GameObject> track;
+    GameObject nextCheckpoint;
+    int nextIndex;
+    void Start () {
+        track = new List<GameObject>();
         generateTrack("track.txt");
 	}
 
-    void Update() {}
+    void Update() {
+        if(track.Count > 0) {
+            if (Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) < 36) {
+                Debug.Log("Hit next");
+                hitCheckpoint();
+            }
+        }
+    }
 
     void generateTrack(string fileName) {
-        string[] lines = System.IO.File.ReadAllLines(fileName);
-
         GameObject previousCheckpoint = null;
-        foreach (string line in lines){
+        string[] lines = System.IO.File.ReadAllLines(fileName);
+        foreach(string line in lines) {
             string[] coordinates = line.Split();
             Vector3 coordinateVector = new Vector3(float.Parse(coordinates[0]), float.Parse(coordinates[1]), float.Parse(coordinates[2]));
             GameObject checkpointClone = Instantiate(checkpoint, coordinateVector*0.1f, Quaternion.identity);
@@ -31,11 +42,23 @@ public class racetrack : MonoBehaviour {
                 lineRenderer.SetPosition(1, checkpointClone.transform.position);
             }
             previousCheckpoint = checkpointClone;
-            //TODO somehow globally track all checkpoints
+            track.Add(checkpointClone);
         }
-
-        //add halo to final checkpoint
-        Behaviour halo = (Behaviour)previousCheckpoint.GetComponent("Halo");
+        Debug.Log("track length: " + track.Count);
+        nextIndex = 0;
+        nextCheckpoint = track[nextIndex];
+        Behaviour halo = (Behaviour)nextCheckpoint.GetComponent("Halo");
         halo.enabled = true;
+    }
+
+    void hitCheckpoint() {
+        Behaviour halo = (Behaviour)nextCheckpoint.GetComponent("Halo");
+        halo.enabled = false;
+        nextIndex = nextIndex+1;
+        if (nextIndex < track.Count) {
+            nextCheckpoint = track[nextIndex];
+            Behaviour nextHalo = (Behaviour)nextCheckpoint.GetComponent("Halo");
+            nextHalo.enabled = true;
+        }
     }
 }

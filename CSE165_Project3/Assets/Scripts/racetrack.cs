@@ -5,6 +5,7 @@ using UnityEngine;
 public class racetrack : MonoBehaviour {
     public GameObject checkpoint;
     public GameObject player;
+    public Material traversedMaterial;
 
     List<GameObject> track;
     GameObject nextCheckpoint;
@@ -15,11 +16,17 @@ public class racetrack : MonoBehaviour {
         //have player start at the starting point
         player.transform.position = track[0].transform.position;
         //have player facing the 2nd checking point initially
-        player.transform.LookAt(track[1].transform.position, new Vector3(0, 1, 0));
+       player.transform.LookAt(track[1].transform.position, new Vector3(0, 1, 0));
 	}
 
     void Update() {
-        if(track.Count > 0) {
+        print(nextIndex);
+        if (nextIndex == track.Count)
+        {
+            //WINNNN
+            Countdown.startEnabled = false;
+        }
+        if (track.Count > 0) {
             if (Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) < 36) {
                 Debug.Log("Hit next");
                 hitCheckpoint();
@@ -59,6 +66,7 @@ public class racetrack : MonoBehaviour {
     void hitCheckpoint() {
         Behaviour halo = (Behaviour)nextCheckpoint.GetComponent("Halo");
         halo.enabled = false;
+        nextCheckpoint.GetComponent<Renderer>().material = traversedMaterial;
         nextIndex = nextIndex+1;
         if (nextIndex < track.Count) {
             nextCheckpoint = track[nextIndex];

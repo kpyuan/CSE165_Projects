@@ -21,7 +21,7 @@ public class controlMap : MonoBehaviour
             if (hand.IsLeft)
             {
                 Vector3 direction = new Vector3(hand.Direction.x, hand.Direction.y, hand.Direction.z);
-                transform.position = hand.PalmPosition.ToVector3() +hand.PalmNormal.ToVector3() *(transform.localScale.y * .5f + .02f);
+                transform.position = hand.PalmPosition.ToVector3() -hand.PalmNormal.ToVector3() *(transform.localScale.y * .5f + .02f);
                 transform.rotation = hand.Basis.CalculateRotation();
             }
         }

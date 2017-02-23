@@ -21,7 +21,7 @@ public class racetrack : MonoBehaviour {
 
     void Update() {
         print(nextIndex);
-        if (nextIndex == track.Count)
+        if (nextIndex >= track.Count)
         {
             //WINNNN
             Countdown.startEnabled = false;

@@ -14,6 +14,8 @@ public class racetrack : MonoBehaviour {
         generateTrack("track.txt");
         //have player start at the starting point
         player.transform.position = track[0].transform.position;
+        //have player facing the 2nd checking point initially
+        player.transform.LookAt(track[1].transform.position, new Vector3(0, 1, 0));
 	}
 
     void Update() {

@@ -14,8 +14,8 @@ public class Timer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        timeTxt.text = timer.ToString();
-        if (!Countdown.finished && Countdown.startEnabled)
+        timeTxt.text = timer.ToString()+"\n"+racetrack.DistanceLength.ToString()+" FT";
+        if (!racetrack.finished && Countdown.startEnabled)
         {
             timer += Time.deltaTime;
         }

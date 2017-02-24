@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class sounds : MonoBehaviour {
-    public static AudioSource startSound;
-    public static AudioSource checkpointSound;
-    public static AudioSource crashSound;
-    public static AudioSource finishSound;
+    private static AudioSource player;
 
-    void Start () {}
+    void Start () {
+        player = GetComponent<AudioSource>();
+        
+    }
 	void Update () {}
 
-    public static void playStart(){
-        startSound.Play();
-    }
-    public static void playCheckpoint(){
-        checkpointSound.Play();
-    }
-    public static void playCrash(){
-        crashSound.Play();
-    }
-    public static void playFinish(){
-        finishSound.Play();
+    public static void playAudioEffect(AudioClip sound){
+        player.clip = sound;
+        player.Play();
     }
 }

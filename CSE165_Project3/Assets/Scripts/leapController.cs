@@ -17,7 +17,7 @@ public class leapController : MonoBehaviour {
         Frame frame = provider.CurrentFrame;
         foreach (Hand hand in frame.Hands) {
             if (hand.IsRight) {
-                if (Countdown.startEnabled)
+                if (Countdown.startEnabled && !racetrack.finished)
                 {
                     Vector3 direction = new Vector3(hand.Direction.x, hand.Direction.y, hand.Direction.z);
                     Vector3 localDirection = player.transform.InverseTransformDirection(direction);

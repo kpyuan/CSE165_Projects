@@ -11,6 +11,12 @@ public class racetrack : MonoBehaviour {
     GameObject nextCheckpoint;
     GameObject lastCheckpoint;
     int nextIndex;
+    public static bool finished;
+    public static float DistanceLength;
+
+    //audio jazz
+    public AudioClip checkpointSound;
+    public AudioClip finishSound;
     void Start () {
         track = new List<GameObject>();
         generateTrack("track.txt");
@@ -21,12 +27,14 @@ public class racetrack : MonoBehaviour {
 	}
 
     void Update() {
-        if (nextIndex >= track.Count && Countdown.finished == false) { //WINNNN
-            sounds.playFinish();
-            Countdown.finished = true;
+        if (nextIndex >= track.Count && finished == false) { //WINNNN
+            sounds.playAudioEffect(finishSound);
+            finished = true;
         }
-        if (track.Count > 0) {
-            if (Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) < 360) {
+        if (track.Count > 0 && Countdown.startEnabled) {
+            //do distance calculation, in feet
+            DistanceLength = Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) * 3.28084f;
+            if (DistanceLength < 30) {
                 Debug.Log("Hit next");
                 hitCheckpoint();
             }
@@ -36,6 +44,7 @@ public class racetrack : MonoBehaviour {
                 Countdown.reset();
             }
         }
+        
     }
 
     void generateTrack(string fileName) {
@@ -77,11 +86,16 @@ public class racetrack : MonoBehaviour {
             nextCheckpoint = track[nextIndex];
             Behaviour nextHalo = (Behaviour)nextCheckpoint.GetComponent("Halo");
             nextHalo.enabled = true;
-            sounds.playCheckpoint();
+            sounds.playAudioEffect(checkpointSound);
         }
     }
-
-    private void OnCollisionEnter() {
-        Debug.Log("AAAAAAAAAAAAAA");
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "building")
+        {
+            player.transform.position = lastCheckpoint.transform.position;
+            Countdown.reset();
+        }
+        
     }
 }

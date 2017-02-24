@@ -165,7 +165,6 @@
     <Compile Include="Assets\Scripts\checkPointHitIndicator.cs" />
     <Compile Include="Assets\Scripts\controlMap.cs" />
     <Compile Include="Assets\Scripts\leapController.cs" />
-    <Compile Include="Assets\Scripts\playerCollider.cs" />
     <Compile Include="Assets\Scripts\racetrack.cs" />
     <Compile Include="Assets\Scripts\sounds.cs" />
   </ItemGroup>

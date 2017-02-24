@@ -32,8 +32,8 @@ public class racetrack : MonoBehaviour {
             finished = true;
         }
         if (track.Count > 0 && Countdown.startEnabled) {
-            //do distance calculation, in feet
-            DistanceLength = Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) * 3.28084f;
+            //do distance calculation, in feet, 1unit=10in=0.83333 ft
+            DistanceLength = Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) * 0.833333f;
             if (DistanceLength < 30) {
                 Debug.Log("Hit next");
                 hitCheckpoint();

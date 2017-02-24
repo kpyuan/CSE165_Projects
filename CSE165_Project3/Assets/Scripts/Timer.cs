@@ -15,7 +15,7 @@ public class Timer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         timeTxt.text = timer.ToString();
-        if (Countdown.startEnabled)
+        if (!Countdown.finished && Countdown.startEnabled)
         {
             timer += Time.deltaTime;
         }

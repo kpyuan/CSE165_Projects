@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class Countdown : MonoBehaviour {
     Text countTxt;
-    float timeLeft;
+    static float timeLeft;
     public static bool startEnabled;
+    public static bool finished;
     // Use this for initialization
     void Start () {
         countTxt = gameObject.GetComponent<Text>();
@@ -16,15 +17,18 @@ public class Countdown : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
         timeLeft -= Time.deltaTime;
         countTxt.text = Mathf.Round(timeLeft).ToString();
-        if (timeLeft <= 0)
-        {
+        if (timeLeft <= 0 && !startEnabled){
+            sounds.playStart();
             countTxt.text = "";
             startEnabled = true;
-
         }
+    }
 
+    public static void reset() {
+        sounds.playCrash();
+        startEnabled = false;
+        timeLeft = 3.0f;
     }
 }

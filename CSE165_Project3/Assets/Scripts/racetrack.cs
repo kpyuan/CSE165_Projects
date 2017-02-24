@@ -9,6 +9,7 @@ public class racetrack : MonoBehaviour {
 
     List<GameObject> track;
     GameObject nextCheckpoint;
+    GameObject lastCheckpoint;
     int nextIndex;
     void Start () {
         track = new List<GameObject>();
@@ -16,23 +17,25 @@ public class racetrack : MonoBehaviour {
         //have player start at the starting point
         player.transform.position = track[0].transform.position;
         //have player facing the 2nd checking point initially
-       player.transform.LookAt(track[1].transform.position, new Vector3(0, 1, 0));
+        player.transform.LookAt(track[1].transform.position, new Vector3(0, 1, 0));
 	}
 
     void Update() {
-        print(nextIndex);
-        if (nextIndex >= track.Count)
-        {
-            //WINNNN
-            Countdown.startEnabled = false;
+        if (nextIndex >= track.Count && Countdown.finished == false) { //WINNNN
+            sounds.playFinish();
+            Countdown.finished = true;
         }
         if (track.Count > 0) {
-            if (Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) < 36) {
+            if (Vector3.Distance(player.transform.position, nextCheckpoint.transform.position) < 360) {
                 Debug.Log("Hit next");
                 hitCheckpoint();
             }
+
+            if(player.transform.position.y < 0.00f) {
+                player.transform.position = lastCheckpoint.transform.position;
+                Countdown.reset();
+            }
         }
-        
     }
 
     void generateTrack(string fileName) {
@@ -59,11 +62,13 @@ public class racetrack : MonoBehaviour {
         Debug.Log("track length: " + track.Count);
         nextIndex = 0;
         nextCheckpoint = track[nextIndex];
+        lastCheckpoint = track[0];
         Behaviour halo = (Behaviour)nextCheckpoint.GetComponent("Halo");
         halo.enabled = true;
     }
 
     void hitCheckpoint() {
+        lastCheckpoint = nextCheckpoint;
         Behaviour halo = (Behaviour)nextCheckpoint.GetComponent("Halo");
         halo.enabled = false;
         nextCheckpoint.GetComponent<Renderer>().material = traversedMaterial;
@@ -72,6 +77,11 @@ public class racetrack : MonoBehaviour {
             nextCheckpoint = track[nextIndex];
             Behaviour nextHalo = (Behaviour)nextCheckpoint.GetComponent("Halo");
             nextHalo.enabled = true;
+            sounds.playCheckpoint();
         }
+    }
+
+    private void OnCollisionEnter() {
+        Debug.Log("AAAAAAAAAAAAAA");
     }
 }

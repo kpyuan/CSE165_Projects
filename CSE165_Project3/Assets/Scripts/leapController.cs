@@ -21,7 +21,7 @@ public class leapController : MonoBehaviour {
                 {
                     Vector3 direction = new Vector3(hand.Direction.x, hand.Direction.y, hand.Direction.z);
                     Vector3 localDirection = player.transform.InverseTransformDirection(direction);
-                    player.transform.Translate(localDirection * Time.deltaTime * 250.0f);
+                    player.transform.Translate(localDirection * Time.deltaTime * 400.0f);
                 }
                 
             }

@@ -142,8 +142,8 @@
     <Compile Include="Assets\OvrAvatar\Scripts\OvrAvatarSkinnedMeshRenderPBSComponent.cs" />
     <Compile Include="Assets\OvrAvatar\Scripts\OvrAvatarTouchController.cs" />
     <Compile Include="Assets\indicatorControl.cs" />
-    <Compile Include="Assets\mapControl.cs" />
     <Compile Include="Assets\pawControl.cs" />
+    <Compile Include="Assets\sounds.cs" />
     <Compile Include="Assets\userControl.cs" />
   </ItemGroup>
   <ItemGroup>

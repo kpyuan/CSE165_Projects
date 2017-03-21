@@ -10,6 +10,6 @@ public class indicatorControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.localRotation = Quaternion.Euler(0, -Mathf.Rad2Deg * camera.transform.localRotation.y+180, 0);
-	}
+        transform.localRotation = Quaternion.Euler(0, -Mathf.Rad2Deg * 2* camera.transform.localRotation.y+180, 0);
+    }
 }
